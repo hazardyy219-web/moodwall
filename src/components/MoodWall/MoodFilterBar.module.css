@@ -1,0 +1,63 @@
+.bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  animation: fadeIn 0.35s ease;
+}
+
+.tab {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--input-bg);
+  border: 1.5px solid var(--btn-secondary-border);
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: var(--transition-theme), transform 0.2s ease;
+}
+
+.tab:hover {
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+  transform: translateY(-1px);
+}
+
+.tabActive {
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+  border-color: transparent;
+}
+
+.tab:focus {
+  outline: none;
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    animation: none;
+  }
+
+  .tab {
+    transition: none;
+  }
+
+  .tab:hover {
+    transform: none;
+  }
+}
