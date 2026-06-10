@@ -23,7 +23,10 @@ async function fetchCommentsForPosts(postIds: string[]): Promise<CommentRow[]> {
   return result.rows as CommentRow[];
 }
 
-async function fetchSinglePost(postId: string, userId: string) {
+async function fetchSinglePost(postId: string | number, userId: string | number) {
+  const postIdStr = String(postId);
+  const userIdStr = String(userId);
+
   const postsResult = await pool.query(
     `SELECT p.id, p.content, p.tag, p.created_at,
             u.id AS author_id, u.email, u.username, u.avatar,
@@ -37,28 +40,29 @@ async function fetchSinglePost(postId: string, userId: string) {
      LEFT JOIN likes l ON l.post_id = p.id
      WHERE p.id = $1
      GROUP BY p.id, u.id`,
-    [postId, userId],
+    [postIdStr, userIdStr],
   );
 
   if (postsResult.rows.length === 0) {
     return null;
   }
 
-  const comments = await fetchCommentsForPosts([postId]);
+  const comments = await fetchCommentsForPosts([postIdStr]);
   return mapPost(postsResult.rows[0] as PostRow, comments);
 }
 
 async function fetchPosts(
-  userId: string,
+  userId: string | number,
   limit: number,
   offset: number,
-  filterUserId?: string,
+  filterUserId?: string | number,
 ) {
-  const params: string[] = [userId, limit, offset];
+  const userIdStr = String(userId);
+  const params: any[] = [userIdStr, limit, offset];
   let whereClause = '';
   if (filterUserId) {
     whereClause = 'WHERE p.user_id = $4';
-    params.push(filterUserId);
+    params.push(String(filterUserId));
   }
 
   const postsResult = await pool.query(
